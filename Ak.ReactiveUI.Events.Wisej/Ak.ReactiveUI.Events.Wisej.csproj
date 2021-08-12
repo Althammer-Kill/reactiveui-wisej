@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+		<TargetFrameworks>net461;net472;net48</TargetFrameworks>
+		<AssemblyName>Ak.ReactiveUI.Events.Wisej</AssemblyName>
+		<RootNamespace>ReactiveUI.Events</RootNamespace>
+		<PackageDescription>Provides Observable-based events API for Wisej UI controls &amp;	event handlers</PackageDescription>
+		<PackageId>Ak.ReactiveUI.Events.Wisej</PackageId>
+		<NoWarn>$(NoWarn);CS1570;CA1812</NoWarn>
+  </PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Pharmacist.Common" Version="2.*" />
+		<PackageReference Include="System.Reactive" Version="5.0.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Reference Include="System" />
+		<Reference Include="System.Drawing" />
+		<Reference Include="System.Windows.Forms" />
+		<Reference Include="Wisej.Framework">
+			<HintPath>C:\Program Files\IceTeaGroup\Wisej 2\bin\Wisej.Framework.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+</Project>

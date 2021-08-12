@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net461;net472;net48</TargetFrameworks>
+    <AssemblyName>Ak.ReactiveUI.Wisej</AssemblyName>
+    <RootNamespace>ReactiveUI.Wisej</RootNamespace>
+    <PackageDescription>Contains the ReactiveUI platform specific extensions for Wisej</PackageDescription>
+    <PackageId>Ak.ReactiveUI.Wisej</PackageId>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <PackageTags>mvvm;reactiveui;rx;reactive extensions;observable;LINQ;events;frp;winforms;net;net472;</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ReactiveUI" Version="14.*" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="Wisej.Framework">
+      <HintPath>C:\Program Files\IceTeaGroup\Wisej 2\bin\Wisej.Framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="RoutedViewHost.Designer.cs">
+      <SubType>UserControl</SubType>
+      <DependentUpon>RoutedViewHost.cs</DependentUpon>
+    </Compile>
+    <Compile Update="ReactiveUserControl.Designer.cs">
+      <SubType>UserControl</SubType>
+      <DependentUpon>ReactiveUserControl.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>
