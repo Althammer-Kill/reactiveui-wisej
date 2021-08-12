@@ -5,9 +5,9 @@
 
 using System;
 using System.Reactive.Concurrency;
-using Wisej.Web;
 
 using Splat;
+using System.Threading;
 
 namespace ReactiveUI.Wisej
 {
@@ -21,10 +21,18 @@ namespace ReactiveUI.Wisej
 			}
 
 			registerFunction(() => new PlatformOperations(), typeof(IPlatformOperations));
+
 			registerFunction(() => new CreatesWisejCommandBinding(), typeof(ICreatesCommandBinding));
+			registerFunction(() => new WisejCreatesObservableForProperty(), typeof(ICreatesObservableForProperty));
 			registerFunction(() => new ActivationForViewFetcher(), typeof(IActivationForViewFetcher));
 			registerFunction(() => new PanelSetMethodBindingConverter(), typeof(ISetMethodBindingConverter));
 			registerFunction(() => new TableContentSetMethodBindingConverter(), typeof(ISetMethodBindingConverter));
+			registerFunction(() => new ComponentModelTypeConverter(), typeof(IBindingTypeConverter));
+
+			if (!ModeDetector.InUnitTestRunner())
+			{
+				RxApp.MainThreadScheduler = new SynchronizationContextScheduler(SynchronizationContext.Current); // TODO
+			}
 		}
 	}
 }
