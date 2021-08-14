@@ -6,7 +6,7 @@
 		<RootNamespace>ReactiveUI.Events</RootNamespace>
 		<PackageDescription>Provides Observable-based events API for Wisej UI controls &amp;	event handlers</PackageDescription>
 		<PackageId>Ak.ReactiveUI.Events.Wisej</PackageId>
-		<NoWarn>$(NoWarn);CS1570;CA1812</NoWarn>
+		<NoWarn>$(NoWarn);CS1570;CA1812;CS0108</NoWarn>
   </PropertyGroup>
 	
 	<ItemGroup>
