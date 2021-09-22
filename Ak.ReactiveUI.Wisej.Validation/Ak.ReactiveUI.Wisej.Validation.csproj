@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net461;net472;net48</TargetFrameworks>
+		<TargetFramework>net48</TargetFramework>
 		<AssemblyName>Ak.ReactiveUI.Wisej.Validation</AssemblyName>
 		<RootNamespace>ReactiveUI.Wisej.Validation</RootNamespace>
 		<PackageDescription>Contains validation extensions for Wisej ReactiveUI.</PackageDescription>
@@ -12,17 +12,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI" Version="14.*" />
+		<PackageReference Include="ReactiveUI" Version="16.*" />
 		<PackageReference Include="ReactiveUI.Validation" Version="2.*" />
 		<PackageReference Include="System.Reactive" Version="5.0.0" />
+		<PackageReference Include="Wisej-2" Version="2.5.16" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Ak.ReactiveUI.Events.Wisej\Ak.ReactiveUI.Events.Wisej.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<Reference Include="Wisej.Framework">
-			<HintPath>C:\Program Files\IceTeaGroup\Wisej 2\bin\Wisej.Framework.dll</HintPath>
-		</Reference>
 	</ItemGroup>
 </Project>
