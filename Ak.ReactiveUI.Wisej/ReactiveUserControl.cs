@@ -3,52 +3,101 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Runtime.CompilerServices;
 using Wisej.Web;
 
 namespace ReactiveUI.Wisej
 {
-    /// <summary>
-    /// This is an  UserControl that is both and UserControl and has a ReactiveObject powers
-    /// (i.e. you can call RaiseAndSetIfChanged).
-    /// </summary>
-    /// <typeparam name="TViewModel">The type of the view model.</typeparam>
-    /// <seealso cref="Wisej.Web.UserControl" />
-    /// <seealso cref="ReactiveUI.IViewFor{TViewModel}" />
-    public partial class ReactiveUserControl<TViewModel> : UserControl, IViewFor<TViewModel>
-        where TViewModel : class
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReactiveUserControl{TViewModel}"/> class.
-        /// </summary>
-        public ReactiveUserControl() => InitializeComponent();
+	/// <summary>
+	/// This is an UserControl that is both and UserControl and has a ReactiveObject powers
+	/// (i.e. you can call RaiseAndSetIfChanged).
+	/// </summary>
+	/// <typeparam name="T">The type of the view model.</typeparam>
+	/// <seealso cref="Wisej.Web.UserControl" />
+	/// <seealso cref="IViewFor{TViewModel}" />
+	public partial class ReactiveUserControl<T> : UserControl, IViewFor<T>, INotifyPropertyChanged, ICanActivate, IDisposable
+		where T : class, INotifyPropertyChanged
+	{
+		private readonly Subject<Unit> initSubject = new();
+		private readonly Subject<Unit> deactivateSubject = new();
+		private readonly CompositeDisposable compositeDisposable = new();
 
-        /// <inheritdoc/>
-        [Category("ReactiveUI")]
-        [Description("The ViewModel.")]
-        [Bindable(true)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public TViewModel? ViewModel { get; set; }
+		private T? viewModel;
 
-        /// <inheritdoc/>
-        object? IViewFor.ViewModel
-        {
-            get => ViewModel;
-            set => ViewModel = (TViewModel?)value;
-        }
+		private bool disposedValue; // To detect redundant calls
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                components?.Dispose();
-            }
+		/// <inheritdoc />
+		public event PropertyChangedEventHandler? PropertyChanged;
 
-            base.Dispose(disposing);
-        }
-    }
+		/// <inheritdoc />
+		public T? ViewModel
+		{
+			get => viewModel;
+			set
+			{
+				if (EqualityComparer<T?>.Default.Equals(viewModel, value))
+				{
+					return;
+				}
+
+				viewModel = value;
+				OnPropertyChanged();
+			}
+		}
+
+		/// <inheritdoc />
+		object? IViewFor.ViewModel
+		{
+			get => ViewModel;
+			set => ViewModel = (T?)value;
+		}
+
+		/// <inheritdoc />
+		public IObservable<Unit> Activated => initSubject.AsObservable();
+
+		/// <inheritdoc />
+		public IObservable<Unit> Deactivated => deactivateSubject.AsObservable();
+
+		/// <inheritdoc/>
+		protected override void OnLoad(EventArgs e)
+		{
+			base.OnLoad(e);
+			initSubject.OnNext(Unit.Default);
+		}
+
+		/// <summary>
+		/// Invokes the property changed event.
+		/// </summary>
+		/// <param name="propertyName">The name of the property.</param>
+		protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+		/// <summary>
+		/// Cleans up the managed resources of the object.
+		/// </summary>
+		/// <param name="disposing">If it is getting called by the Dispose() method rather than a finalizer.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (!disposedValue)
+			{
+				if (disposing)
+				{
+					components?.Dispose();
+
+					initSubject.Dispose();
+					compositeDisposable.Dispose();
+					deactivateSubject.OnNext(Unit.Default);
+				}
+
+				disposedValue = true;
+			}
+		}
+	}
 }
