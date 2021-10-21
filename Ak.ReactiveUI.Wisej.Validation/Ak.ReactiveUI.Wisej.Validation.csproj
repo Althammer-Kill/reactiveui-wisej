@@ -4,21 +4,24 @@
 		<TargetFramework>net48</TargetFramework>
 		<AssemblyName>Ak.ReactiveUI.Wisej.Validation</AssemblyName>
 		<RootNamespace>ReactiveUI.Wisej.Validation</RootNamespace>
-		<PackageDescription>Contains validation extensions for Wisej ReactiveUI.</PackageDescription>
-		<PackageId>Ak.ReactiveUI.Wisej.Validation</PackageId>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<PackageTags>mvvm;reactiveui;rx;reactive extensions;observable;LINQ;events;frp;winforms;net;net472;wisej;</PackageTags>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<PackageId>Ak.ReactiveUI.Wisej.Validation</PackageId>
+		<PackageDescription>Contains validation extensions for Wisej ReactiveUI.</PackageDescription>
+		<PackageTags>mvvm;reactiveui;rx;reactive extensions;observable;LINQ;events;frp;winforms;net;net48;wisej;</PackageTags>
+	</PropertyGroup>
+	
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI" Version="16.*" />
-		<PackageReference Include="ReactiveUI.Validation" Version="2.*" />
-		<PackageReference Include="System.Reactive" Version="5.0.0" />
-		<PackageReference Include="Wisej-2" Version="2.5.16" />
+		<PackageReference Include="ReactiveUI" Version="16.*"/>
+		<PackageReference Include="ReactiveUI.Validation" Version="2.*"/>
+		<PackageReference Include="System.Reactive" Version="5.0.0"/>
+		<PackageReference Include="Wisej-2" Version="2.5.16"/>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Ak.ReactiveUI.Events.Wisej\Ak.ReactiveUI.Events.Wisej.csproj" />
+		<ProjectReference Include="..\Ak.ReactiveUI.Events.Wisej\Ak.ReactiveUI.Events.Wisej.csproj"/>
 	</ItemGroup>
 </Project>

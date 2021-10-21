@@ -1,23 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+	<PropertyGroup>
 		<TargetFramework>net48</TargetFramework>
 		<AssemblyName>Ak.ReactiveUI.Events.Wisej</AssemblyName>
 		<RootNamespace>ReactiveUI.Events</RootNamespace>
-		<PackageDescription>Provides Observable-based events API for Wisej UI controls &amp;	event handlers</PackageDescription>
-		<PackageId>Ak.ReactiveUI.Events.Wisej</PackageId>
 		<NoWarn>$(NoWarn);CS1570;CA1812;CS0108</NoWarn>
-  </PropertyGroup>
-	
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>Ak.ReactiveUI.Events.Wisej</PackageId>
+		<PackageDescription>Provides Observable-based events API for Wisej UI controls &amp; event handlers</PackageDescription>
+		<PackageTags>mvvm;reactiveui;rx;reactive extensions;observable;LINQ;events;frp;winforms;net;net48;wisej;</PackageTags>
+	</PropertyGroup>
+
 	<ItemGroup>
-		<PackageReference Include="Pharmacist.Common" Version="2.*" />
-		<PackageReference Include="System.Reactive" Version="5.0.0" />
-		<PackageReference Include="Wisej-2" Version="2.5.16" />
+		<PackageReference Include="Pharmacist.Common" Version="2.*"/>
+		<PackageReference Include="System.Reactive" Version="5.0.0"/>
+		<PackageReference Include="Wisej-2" Version="2.5.16"/>
 	</ItemGroup>
-	
+
 	<ItemGroup>
-		<Reference Include="System" />
-		<Reference Include="System.Drawing" />
-		<Reference Include="System.Windows.Forms" />
+		<Reference Include="System"/>
+		<Reference Include="System.Drawing"/>
+		<Reference Include="System.Windows.Forms"/>
 	</ItemGroup>
 </Project>
