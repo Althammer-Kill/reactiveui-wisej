@@ -23,7 +23,7 @@ namespace ReactiveUI.Wisej
 	/// <typeparam name="T">The type of the view model.</typeparam>
 	/// <seealso cref="Wisej.Web.UserControl" />
 	/// <seealso cref="IViewFor{TViewModel}" />
-	public partial class ReactiveUserControl<T> : UserControl, IViewFor<T>, INotifyPropertyChanged, ICanActivate, IDisposable
+	public partial class ReactiveUserControl<T> : UserControl, IViewFor<T>, INotifyPropertyChanged, ICanActivate
 		where T : class, INotifyPropertyChanged
 	{
 		private readonly Subject<Unit> initSubject = new();

@@ -7,13 +7,14 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using ReactiveUI.Validation.ValidationBindings.Abstractions;
 using Wisej.Web;
 
 namespace ReactiveUI.Wisej.Validation
 {
 	public static class ErrorProviderValidation
 	{
-		public static void BindValidation<TView, TViewModel, TViewModelProperty>(
+		public static IValidationBinding BindValidation<TView, TViewModel, TViewModelProperty>(
 			this TView view,
 			TViewModel viewModel,
 			Expression<Func<TViewModel, TViewModelProperty>> viewModelProperty,
@@ -37,7 +38,7 @@ namespace ReactiveUI.Wisej.Validation
 				?? Locator.Current.GetService<IValidationTextFormatter<string>>()
 				?? SingleLineFormatter.Default;
 
-			ValidationBinding.ForProperty(
+			return ValidationBinding.ForProperty(
 				view,
 				viewModelProperty,
 				action: (states, errors) =>
