@@ -15,13 +15,13 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI" Version="16.*"/>
-		<PackageReference Include="ReactiveUI.Validation" Version="2.*"/>
-		<PackageReference Include="System.Reactive" Version="5.0.0"/>
-		<PackageReference Include="Wisej-2" Version="2.5.16"/>
+		<PackageReference Include="ReactiveUI" Version="16.*" />
+		<PackageReference Include="ReactiveUI.Validation" Version="2.*" />
+		<PackageReference Include="System.Reactive" Version="5.0.0" />
+		<PackageReference Include="Wisej-2" Version="2.5.19" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Ak.ReactiveUI.Events.Wisej\Ak.ReactiveUI.Events.Wisej.csproj"/>
+		<ProjectReference Include="..\Ak.ReactiveUI.Events.Wisej\Ak.ReactiveUI.Events.Wisej.csproj" />
 	</ItemGroup>
 </Project>

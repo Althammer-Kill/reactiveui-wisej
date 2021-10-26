@@ -16,12 +16,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI" Version="16.*"/>
-		<PackageReference Include="System.Reactive" Version="5.0.0"/>
-		<PackageReference Include="Wisej-2" Version="2.5.16"/>
+		<PackageReference Include="ReactiveUI" Version="16.*" />
+		<PackageReference Include="System.Reactive" Version="5.0.0" />
+		<PackageReference Include="Wisej-2" Version="2.5.19" />
 	</ItemGroup>
 	<ItemGroup>
-		<Reference Include="System.Windows.Forms"/>
+		<Reference Include="System.Windows.Forms" />
 	</ItemGroup>
 
 	<ItemGroup>
