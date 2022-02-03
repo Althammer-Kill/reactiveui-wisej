@@ -16,9 +16,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI" Version="16.*" />
+		<PackageReference Include="ReactiveUI" Version="17.1.17" />
 		<PackageReference Include="System.Reactive" Version="5.0.0" />
-		<PackageReference Include="Wisej-2" Version="2.5.19" />
+		<PackageReference Include="Wisej-2" Version="2.5.24" />
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="System.Windows.Forms" />
