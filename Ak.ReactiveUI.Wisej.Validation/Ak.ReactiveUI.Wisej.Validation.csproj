@@ -18,7 +18,7 @@
 		<PackageReference Include="ReactiveUI" Version="17.1.17" />
 		<PackageReference Include="ReactiveUI.Validation" Version="2.*" />
 		<PackageReference Include="System.Reactive" Version="5.0.0" />
-		<PackageReference Include="Wisej-2" Version="2.5.24" />
+		<PackageReference Include="Wisej-2" Version="2.5.28" />
 	</ItemGroup>
 
 	<ItemGroup>
