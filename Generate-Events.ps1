@@ -1,1 +1,1 @@
-pharmacist generate-custom -s "C:\Program Files\IceTeaGroup\Wisej 2\bin" -a "C:\Program Files\IceTeaGroup\Wisej 2\bin\Wisej.Framework.dll" -t net48 -o Ak.ReactiveUI.Events.Wisej --output-prefix Events
+pharmacist generate-custom -s "C:\Users\DanielWahlmann\source\repos\learnbase\LearnBase.Admin.View\bin" -a "C:\Users\DanielWahlmann\source\repos\learnbase\LearnBase.Admin.View\bin\Wisej.Framework.dll" -t net48 -o Ak.ReactiveUI.Events.Wisej --output-prefix Events

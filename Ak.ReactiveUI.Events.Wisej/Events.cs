@@ -11,7 +11,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 // Generated with Pharmacist version: 2.0.8+ea3bd63e74
-// Assemblies included: C:\Program Files\IceTeaGroup\Wisej 2\bin\Wisej.Framework.dll
+// Assemblies included: C:\Users\DanielWahlmann\source\repos\learnbase\LearnBase.Admin.View\bin\Wisej.Framework.dll
 
 using global::System;
 using global::System.Reactive;
@@ -436,6 +436,10 @@ namespace Wisej.Web
         /// </summary>
         public static RxComboBoxEvents Events(this global::Wisej.Web.ComboBox item) => new RxComboBoxEvents(item);
         /// <summary>
+        /// A wrapper class which wraps all the events contained within the <see cref = "global::Wisej.Web.Command"/> class.
+        /// </summary>
+        public static RxCommandEvents Events(this global::Wisej.Web.Command item) => new RxCommandEvents(item);
+        /// <summary>
         /// A wrapper class which wraps all the events contained within the <see cref = "global::Wisej.Web.CommonDialog"/> class.
         /// </summary>
         public static RxCommonDialogEvents Events(this global::Wisej.Web.CommonDialog item) => new RxCommonDialogEvents(item);
@@ -520,9 +524,25 @@ namespace Wisej.Web
         /// </summary>
         public static RxHtmlPanelEvents Events(this global::Wisej.Web.HtmlPanel item) => new RxHtmlPanelEvents(item);
         /// <summary>
+        /// A wrapper class which wraps all the events contained within the <see cref = "global::Wisej.Web.ICommand"/> class.
+        /// </summary>
+        public static RxICommandEvents Events(this global::Wisej.Web.ICommand item) => new RxICommandEvents(item);
+        /// <summary>
+        /// A wrapper class which wraps all the events contained within the <see cref = "global::Wisej.Web.ICommandSource"/> class.
+        /// </summary>
+        public static RxICommandSourceEvents Events(this global::Wisej.Web.ICommandSource item) => new RxICommandSourceEvents(item);
+        /// <summary>
         /// A wrapper class which wraps all the events contained within the <see cref = "global::Wisej.Web.IFramePanel"/> class.
         /// </summary>
         public static RxIFramePanelEvents Events(this global::Wisej.Web.IFramePanel item) => new RxIFramePanelEvents(item);
+        /// <summary>
+        /// A wrapper class which wraps all the events contained within the <see cref = "global::Wisej.Web.IModified"/> class.
+        /// </summary>
+        public static RxIModifiedEvents Events(this global::Wisej.Web.IModified item) => new RxIModifiedEvents(item);
+        /// <summary>
+        /// A wrapper class which wraps all the events contained within the <see cref = "global::Wisej.Web.IReadOnly"/> class.
+        /// </summary>
+        public static RxIReadOnlyEvents Events(this global::Wisej.Web.IReadOnly item) => new RxIReadOnlyEvents(item);
         /// <summary>
         /// A wrapper class which wraps all the events contained within the <see cref = "global::Wisej.Web.Label"/> class.
         /// </summary>
@@ -1152,6 +1172,14 @@ namespace Wisej.Web
         }
 
         /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.Button.CommandChanged"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::System.EventArgs> CommandChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.CommandChanged += x, x => _data.CommandChanged -= x);
+        /// <summary>
         /// Gets an observable which signals when the <see cref = "global::Wisej.Web.Button.ItemClicked"/> event triggers.
         /// </summary>
         public global::System.IObservable<global::Wisej.Web.MenuButtonItemClickedEventArgs> ItemClicked => global::System.Reactive.Linq.Observable.FromEvent<global::Wisej.Web.MenuButtonItemClickedEventHandler, global::Wisej.Web.MenuButtonItemClickedEventArgs>(eventHandler =>
@@ -1531,6 +1559,31 @@ namespace Wisej.Web
             void Handler(object sender, global::Wisej.Web.ToolClickEventArgs e) => eventHandler(e);
             return Handler;
         }, x => _data.ToolClick += x, x => _data.ToolClick -= x);
+    }
+
+    /// <summary>
+    /// A class which wraps the events contained within the <see cref = "global::Wisej.Web.Command"/> class as observables.
+    /// </summary>
+    public class RxCommandEvents
+    {
+        private readonly global::Wisej.Web.Command _data;
+        /// <summary>
+        /// Initializes a new instance of the <see cref = "global::Wisej.Web.Command"/> class.
+        /// </summary>
+        /// <param name = "data">The class that is being wrapped.</param>
+        public RxCommandEvents(global::Wisej.Web.Command data)
+        {
+            _data = data;
+        }
+
+        /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.Command.CanExecuteChanged"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::System.EventArgs> CanExecuteChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.CanExecuteChanged += x, x => _data.CanExecuteChanged -= x);
     }
 
     /// <summary>
@@ -2786,6 +2839,14 @@ namespace Wisej.Web
             return Handler;
         }, x => _data.DataMemberChanged += x, x => _data.DataMemberChanged -= x);
         /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.DataGridView.DataRead"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::Wisej.Web.DataGridViewDataReadEventArgs> DataRead => global::System.Reactive.Linq.Observable.FromEvent<global::Wisej.Web.DataGridViewDataReadEventHandler, global::Wisej.Web.DataGridViewDataReadEventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::Wisej.Web.DataGridViewDataReadEventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.DataRead += x, x => _data.DataRead -= x);
+        /// <summary>
         /// Gets an observable which signals when the <see cref = "global::Wisej.Web.DataGridView.DataSourceChanged"/> event triggers.
         /// </summary>
         public global::System.IObservable<global::System.EventArgs> DataSourceChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
@@ -3519,6 +3580,14 @@ namespace Wisej.Web
             return Handler;
         }, x => _data.MaskChanged += x, x => _data.MaskChanged -= x);
         /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.DateTimePicker.ModifiedChanged"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::System.EventArgs> ModifiedChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.ModifiedChanged += x, x => _data.ModifiedChanged -= x);
+        /// <summary>
         /// Gets an observable which signals when the <see cref = "global::Wisej.Web.DateTimePicker.MouseClick"/> event triggers.
         /// </summary>
         public global::System.IObservable<global::Wisej.Web.MouseEventArgs> MouseClick => global::System.Reactive.Linq.Observable.FromEvent<global::Wisej.Web.MouseEventHandler, global::Wisej.Web.MouseEventArgs>(eventHandler =>
@@ -3687,6 +3756,14 @@ namespace Wisej.Web
             void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
             return Handler;
         }, x => _data.TabStopChanged += x, x => _data.TabStopChanged -= x);
+        /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.Desktop.TaskbarAlignmentChanged"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::System.EventArgs> TaskbarAlignmentChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.TaskbarAlignmentChanged += x, x => _data.TaskbarAlignmentChanged -= x);
         /// <summary>
         /// Gets an observable which signals when the <see cref = "global::Wisej.Web.Desktop.TaskbarPositionChanged"/> event triggers.
         /// </summary>
@@ -3916,14 +3993,6 @@ namespace Wisej.Web
             return Handler;
         }, x => _data.Leave += x, x => _data.Leave -= x);
         /// <summary>
-        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.FlashPlayer.Loaded"/> event triggers.
-        /// </summary>
-        public global::System.IObservable<global::System.EventArgs> Loaded => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
-        {
-            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
-            return Handler;
-        }, x => _data.Loaded += x, x => _data.Loaded -= x);
-        /// <summary>
         /// Gets an observable which signals when the <see cref = "global::Wisej.Web.FlashPlayer.RightToLeftChanged"/> event triggers.
         /// </summary>
         public global::System.IObservable<global::System.EventArgs> RightToLeftChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
@@ -3963,14 +4032,6 @@ namespace Wisej.Web
             void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
             return Handler;
         }, x => _data.TextChanged += x, x => _data.TextChanged -= x);
-        /// <summary>
-        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.FlashPlayer.Timeout"/> event triggers.
-        /// </summary>
-        public global::System.IObservable<global::System.EventArgs> Timeout => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
-        {
-            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
-            return Handler;
-        }, x => _data.Timeout += x, x => _data.Timeout -= x);
         /// <summary>
         /// Gets an observable which signals when the <see cref = "global::Wisej.Web.FlashPlayer.Validated"/> event triggers.
         /// </summary>
@@ -4411,6 +4472,56 @@ namespace Wisej.Web
     }
 
     /// <summary>
+    /// A class which wraps the events contained within the <see cref = "global::Wisej.Web.ICommand"/> class as observables.
+    /// </summary>
+    public class RxICommandEvents
+    {
+        private readonly global::Wisej.Web.ICommand _data;
+        /// <summary>
+        /// Initializes a new instance of the <see cref = "global::Wisej.Web.ICommand"/> class.
+        /// </summary>
+        /// <param name = "data">The class that is being wrapped.</param>
+        public RxICommandEvents(global::Wisej.Web.ICommand data)
+        {
+            _data = data;
+        }
+
+        /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.ICommand.CanExecuteChanged"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::System.EventArgs> CanExecuteChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.CanExecuteChanged += x, x => _data.CanExecuteChanged -= x);
+    }
+
+    /// <summary>
+    /// A class which wraps the events contained within the <see cref = "global::Wisej.Web.ICommandSource"/> class as observables.
+    /// </summary>
+    public class RxICommandSourceEvents
+    {
+        private readonly global::Wisej.Web.ICommandSource _data;
+        /// <summary>
+        /// Initializes a new instance of the <see cref = "global::Wisej.Web.ICommandSource"/> class.
+        /// </summary>
+        /// <param name = "data">The class that is being wrapped.</param>
+        public RxICommandSourceEvents(global::Wisej.Web.ICommandSource data)
+        {
+            _data = data;
+        }
+
+        /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.ICommandSource.CommandChanged"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::System.EventArgs> CommandChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.CommandChanged += x, x => _data.CommandChanged -= x);
+    }
+
+    /// <summary>
     /// A class which wraps the events contained within the <see cref = "global::Wisej.Web.IFramePanel"/> class as observables.
     /// </summary>
     public class RxIFramePanelEvents : global::Wisej.Web.RxControlEvents
@@ -4441,6 +4552,56 @@ namespace Wisej.Web
             void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
             return Handler;
         }, x => _data.UrlChanged += x, x => _data.UrlChanged -= x);
+    }
+
+    /// <summary>
+    /// A class which wraps the events contained within the <see cref = "global::Wisej.Web.IModified"/> class as observables.
+    /// </summary>
+    public class RxIModifiedEvents
+    {
+        private readonly global::Wisej.Web.IModified _data;
+        /// <summary>
+        /// Initializes a new instance of the <see cref = "global::Wisej.Web.IModified"/> class.
+        /// </summary>
+        /// <param name = "data">The class that is being wrapped.</param>
+        public RxIModifiedEvents(global::Wisej.Web.IModified data)
+        {
+            _data = data;
+        }
+
+        /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.IModified.ModifiedChanged"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::System.EventArgs> ModifiedChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.ModifiedChanged += x, x => _data.ModifiedChanged -= x);
+    }
+
+    /// <summary>
+    /// A class which wraps the events contained within the <see cref = "global::Wisej.Web.IReadOnly"/> class as observables.
+    /// </summary>
+    public class RxIReadOnlyEvents
+    {
+        private readonly global::Wisej.Web.IReadOnly _data;
+        /// <summary>
+        /// Initializes a new instance of the <see cref = "global::Wisej.Web.IReadOnly"/> class.
+        /// </summary>
+        /// <param name = "data">The class that is being wrapped.</param>
+        public RxIReadOnlyEvents(global::Wisej.Web.IReadOnly data)
+        {
+            _data = data;
+        }
+
+        /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.IReadOnly.ReadOnlyChanged"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::System.EventArgs> ReadOnlyChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.ReadOnlyChanged += x, x => _data.ReadOnlyChanged -= x);
     }
 
     /// <summary>
@@ -5487,6 +5648,14 @@ namespace Wisej.Web
             return Handler;
         }, x => _data.BackColorChanged += x, x => _data.BackColorChanged -= x);
         /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.MenuItem.CheckedChanged"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::System.EventArgs> CheckedChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.CheckedChanged += x, x => _data.CheckedChanged -= x);
+        /// <summary>
         /// Gets an observable which signals when the <see cref = "global::Wisej.Web.MenuItem.Click"/> event triggers.
         /// </summary>
         public global::System.IObservable<global::System.EventArgs> Click => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
@@ -6422,6 +6591,14 @@ namespace Wisej.Web
             void Handler(object sender, global::Wisej.Web.PropertyValueFormattingEventArgs e) => eventHandler(e);
             return Handler;
         }, x => _data.PropertyValueFormatting += x, x => _data.PropertyValueFormatting -= x);
+        /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.PropertyGrid.ReadOnlyChanged"/> event triggers.
+        /// </summary>
+        public global::System.IObservable<global::System.EventArgs> ReadOnlyChanged => global::System.Reactive.Linq.Observable.FromEvent<global::System.EventHandler, global::System.EventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => _data.ReadOnlyChanged += x, x => _data.ReadOnlyChanged -= x);
         /// <summary>
         /// Gets an observable which signals when the <see cref = "global::Wisej.Web.PropertyGrid.SelectedGridItemBeginEdit"/> event triggers.
         /// </summary>
@@ -9160,6 +9337,14 @@ namespace Wisej.Web
             void Handler(object sender, global::System.EventArgs e) => eventHandler(e);
             return Handler;
         }, x => global::Wisej.Web.Application.LeaveThreadModal += x, x => global::Wisej.Web.Application.LeaveThreadModal -= x);
+        /// <summary>
+        /// Gets an observable which signals when the <see cref = "global::Wisej.Web.Application.LicenseError"/> event triggers.
+        /// </summary>
+        public static global::System.IObservable<global::Wisej.Web.HashChangedEventArgs> ApplicationLicenseError => global::System.Reactive.Linq.Observable.FromEvent<global::Wisej.Web.LicenseErrorEventHandler, global::Wisej.Web.HashChangedEventArgs>(eventHandler =>
+        {
+            void Handler(object sender, global::Wisej.Web.HashChangedEventArgs e) => eventHandler(e);
+            return Handler;
+        }, x => global::Wisej.Web.Application.LicenseError += x, x => global::Wisej.Web.Application.LicenseError -= x);
         /// <summary>
         /// Gets an observable which signals when the <see cref = "global::Wisej.Web.Application.ResponsiveProfileChanged"/> event triggers.
         /// </summary>

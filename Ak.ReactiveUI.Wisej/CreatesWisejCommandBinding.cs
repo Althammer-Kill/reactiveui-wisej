@@ -49,7 +49,7 @@ namespace ReactiveUI.Wisej
         }
 
         /// <inheritdoc/>
-        public IDisposable? BindCommandToObject(ICommand? command, object? target, IObservable<object?> commandParameter)
+        public IDisposable? BindCommandToObject(System.Windows.Input.ICommand? command, object? target, IObservable<object?> commandParameter)
         {
             if (target is null)
             {
@@ -75,7 +75,7 @@ namespace ReactiveUI.Wisej
         }
 
         /// <inheritdoc/>
-        public IDisposable? BindCommandToObject<TEventArgs>(ICommand? command, object? target, IObservable<object?> commandParameter, string eventName)
+        public IDisposable? BindCommandToObject<TEventArgs>(System.Windows.Input.ICommand? command, object? target, IObservable<object?> commandParameter, string eventName)
         {
             if (command is null)
             {
