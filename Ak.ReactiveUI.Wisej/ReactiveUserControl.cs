@@ -59,6 +59,24 @@ namespace ReactiveUI.Wisej
 			get => ViewModel;
 			set => ViewModel = (T?)value;
 		}
+		
+		public bool IsDesignerHosted
+		{
+			get
+			{
+				if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+					return true;
+
+				Control ctrl = this;
+				while (ctrl != null)
+				{
+					if ((ctrl.Site != null) && ctrl.Site.DesignMode)
+						return true;
+					ctrl = ctrl.Parent;
+				}
+				return false;
+			}
+		}
 
 		/// <inheritdoc />
 		public IObservable<Unit> Activated => initSubject.AsObservable();
