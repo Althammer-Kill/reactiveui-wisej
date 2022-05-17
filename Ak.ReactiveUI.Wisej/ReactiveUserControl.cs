@@ -117,5 +117,10 @@ namespace ReactiveUI.Wisej
 				disposedValue = true;
 			}
 		}
-	}
+
+        protected virtual void BindViewModel(CompositeDisposable dr)
+        {
+
+        }
+    }
 }
