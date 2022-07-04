@@ -17,13 +17,13 @@ using Wisej.Web;
 namespace ReactiveUI.Wisej
 {
 	/// <summary>
-	/// This is an UserControl that is both and UserControl and has a ReactiveObject powers
+	/// This is an UserControl that is both a Page and has a ReactiveObject powers
 	/// (i.e. you can call RaiseAndSetIfChanged).
 	/// </summary>
 	/// <typeparam name="T">The type of the view model.</typeparam>
 	/// <seealso cref="Wisej.Web.UserControl" />
 	/// <seealso cref="IViewFor{TViewModel}" />
-	public partial class ReactiveUserControl<T> : UserControl, IViewFor<T>, INotifyPropertyChanged, ICanActivate
+	public partial class ReactivePage<T> : Page, IViewFor<T>, INotifyPropertyChanged, ICanActivate
 		where T : class, INotifyPropertyChanged
 	{
 		private readonly Subject<Unit> initSubject = new();
@@ -59,7 +59,7 @@ namespace ReactiveUI.Wisej
 			get => ViewModel;
 			set => ViewModel = (T?)value;
 		}
-		
+
 		public bool IsDesignerHosted
 		{
 			get
@@ -119,9 +119,10 @@ namespace ReactiveUI.Wisej
 			base.Dispose(disposing);
 		}
 
-        protected virtual void BindViewModel(CompositeDisposable dr)
-        {
+		protected virtual void BindViewModel(CompositeDisposable dr)
+		{
 
-        }
-    }
+		}
+	}
 }
+
