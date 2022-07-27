@@ -1,1 +1,1 @@
-pharmacist generate-custom -s "C:\Program Files\IceTeaGroup\Wisej 2\bin" -a "C:\Program Files\IceTeaGroup\Wisej 2\bin\Wisej.Framework.dll" -t net48 -o Ak.ReactiveUI.Events.Wisej --output-prefix Events
+pharmacist generate-custom -s "C:\Users\nitroxis\.nuget\packages\wisej-2\2.5.38\lib\net48" -a "C:\Users\nitroxis\.nuget\packages\wisej-2\2.5.38\lib\net48\Wisej.Framework.dll" -t net48 -o Ak.ReactiveUI.Events.Wisej --output-prefix Events
