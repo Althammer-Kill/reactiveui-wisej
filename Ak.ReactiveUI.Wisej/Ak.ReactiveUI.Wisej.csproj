@@ -25,6 +25,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="ReactiveUserForm.cs" />
+		<Compile Update="ReactiveUserControl - Copy.Designer.cs">
+		  <SubType>UserControl</SubType>
+		  <DependentUpon>ReactiveUserControl.cs</DependentUpon>
+		</Compile>
 		<Compile Update="RoutedViewHost.Designer.cs">
 			<SubType>UserControl</SubType>
 			<DependentUpon>RoutedViewHost.cs</DependentUpon>
