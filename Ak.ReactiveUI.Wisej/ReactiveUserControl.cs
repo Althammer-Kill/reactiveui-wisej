@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -29,6 +30,10 @@ namespace ReactiveUI.Wisej
 		private readonly Subject<Unit> initSubject = new();
 		private readonly Subject<Unit> deactivateSubject = new();
 		private readonly CompositeDisposable compositeDisposable = new();
+		private readonly WisejScheduler scheduler;
+
+		public IScheduler Scheduler => scheduler;
+
 
 		private T? viewModel;
 
@@ -83,6 +88,12 @@ namespace ReactiveUI.Wisej
 
 		/// <inheritdoc />
 		public IObservable<Unit> Deactivated => deactivateSubject.AsObservable();
+
+
+		protected ReactiveUserControl()
+		{
+			this.scheduler = new WisejScheduler(this);
+		}
 
 		/// <inheritdoc/>
 		protected override void OnLoad(EventArgs e)
