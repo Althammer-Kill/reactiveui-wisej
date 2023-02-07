@@ -32,6 +32,8 @@ namespace ReactiveUI.Wisej
 		private readonly CompositeDisposable compositeDisposable = new();
 		private readonly WisejScheduler scheduler;
 
+		private bool ViewModelBinded = false;
+
 		public IScheduler Scheduler => scheduler;
 
 		private T? viewModel;
@@ -130,7 +132,10 @@ namespace ReactiveUI.Wisej
 
         protected virtual void BindViewModel(CompositeDisposable dr)
         {
+	        if (ViewModelBinded)
+		        throw new Exception("ViewModel was binded twice! Make sure to only call BindViewModel once in the final child class!");
 
+	        ViewModelBinded = true;
         }
     }
 }
