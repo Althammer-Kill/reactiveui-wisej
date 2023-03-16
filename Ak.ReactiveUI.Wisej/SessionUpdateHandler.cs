@@ -8,41 +8,13 @@ namespace ReactiveUI.Wisej
 {
 	public static class SessionUpdateHandler
 	{
-		public static HashSet<string> activeUpdates = new HashSet<string>();
+		public static Dictionary<string, int> activeUpdates = new Dictionary<string, int>();
 
-		public static void UpdateClientWithLoading(Control control, Action action)
+		private static object mutex = new object();
+
+
+		public static void UpdateClient(IWisejComponent context, Action action, bool allowLoader = true)
 		{
-			var id = "";
-			Application.RunInContext(control, () =>
-			{
-				id = Application.SessionId;
-			});
-
-
-			if (activeUpdates.Contains(id))
-			{
-				//Debug.WriteLine("Skipping nested Update");
-				action.Invoke();
-				return;
-			}
-
-			//Debug.WriteLine("Starting Update");
-			activeUpdates.Add(id);
-			Application.Update(control, () => control.ShowLoader = true);
-			Application.Update(control, action);
-			Application.Update(control, () => control.ShowLoader = false);
-			activeUpdates.Remove(id);
-			//Debug.WriteLine("Ending Update");
-		}
-
-		public static void UpdateClient(IWisejComponent context, Action action, bool allowLoader = false)
-		{
-
-			if (allowLoader && context is Control control)
-			{
-				UpdateClientWithLoading(control, action);
-				return;
-			}
 
 			var id = "";
 			Application.RunInContext(context, () =>
@@ -50,19 +22,44 @@ namespace ReactiveUI.Wisej
 				id = Application.SessionId;
 			});
 
+			var isOuterUpdate = false;
 
-			if (activeUpdates.Contains(id))
+			lock (mutex)
 			{
-				//Debug.WriteLine("Skipping nested Update");
-				action.Invoke();
-				return;
+				if (!activeUpdates.ContainsKey(id))
+				{
+					activeUpdates.Add(id, 1);
+					isOuterUpdate = true;
+				}
+				else
+					activeUpdates[id] += 1;
 			}
 
-			//Debug.WriteLine("Starting Update");
-			activeUpdates.Add(id);
-			Application.Update(context, action);
-			activeUpdates.Remove(id);
-			//Debug.WriteLine("Ending Update");
+			if (isOuterUpdate && allowLoader && context is Control control)
+			{
+				control.ShowLoader = true;
+				action.Invoke();
+				control.ShowLoader = false;
+			}
+			else
+			{
+				action.Invoke();
+			}
+
+			lock (mutex) { activeUpdates[id] -= 1; }
+
+			bool performUpdate  = false;
+			lock (mutex)
+			{
+				if (activeUpdates[id] <= 0)
+				{
+					activeUpdates.Remove(id);
+					performUpdate = true;
+				}
+			}
+
+			if(performUpdate)
+				Application.Update(context);
 		}
 	}
 }
