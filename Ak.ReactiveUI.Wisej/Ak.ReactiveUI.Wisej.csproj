@@ -21,6 +21,7 @@
 		<PackageReference Include="Wisej-3" Version="3.0.11" />
 	</ItemGroup>
 	<ItemGroup>
+		<Reference Include="System.Web" />
 		<Reference Include="System.Windows.Forms" />
 	</ItemGroup>
 

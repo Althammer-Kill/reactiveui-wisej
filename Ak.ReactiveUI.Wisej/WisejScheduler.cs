@@ -21,7 +21,7 @@ public class WisejScheduler : IScheduler
 	{
 		var isCancelled = false; 
 		var innerDisp = new SerialDisposable() { Disposable = Disposable.Empty };
-		Application.Update(context, () =>
+		SessionUpdateHandler.UpdateClient(context, () =>
 		{
 			if (isCancelled)
 			{
@@ -49,7 +49,7 @@ public class WisejScheduler : IScheduler
 			if (task.IsCanceled)
 				return;
 
-			Application.Update(context, () =>
+			SessionUpdateHandler.UpdateClient(context, () =>
 			{
 				if (token.IsCancellationRequested)
 					return;
