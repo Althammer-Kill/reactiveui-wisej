@@ -29,7 +29,7 @@ public class WisejScheduler : IScheduler
 			}
 
 			innerDisp.Disposable = action(this, state);
-		});
+		}, showLoader: true);
 
 		 return new CompositeDisposable(
 			Disposable.Create(() => isCancelled = true),

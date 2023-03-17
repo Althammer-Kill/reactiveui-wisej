@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using Wisej.Core;
 using Wisej.Web;
 
@@ -8,58 +10,81 @@ namespace ReactiveUI.Wisej
 {
 	public static class SessionUpdateHandler
 	{
-		public static Dictionary<string, int> activeUpdates = new Dictionary<string, int>();
-
-		private static object mutex = new object();
-
-
-		public static void UpdateClient(IWisejComponent context, Action action, bool allowLoader = true)
+		public static void InitializeSession()
 		{
+			Application.Session.SessionUpdateInfo = new SessionUpdateInfo();
+		}
 
-			var id = "";
-			Application.RunInContext(context, () =>
+
+		[ThreadStatic]
+		private static bool nestedUpdate;
+
+		public static ConcurrentDictionary<string, object> sessionMutex = new ConcurrentDictionary<string, object>();
+
+		public static void UpdateClient(IWisejComponent context, Action action, bool showLoader = false)
+		{
+			if (nestedUpdate)
 			{
-				id = Application.SessionId;
-			});
-
-			var isOuterUpdate = false;
-
-			lock (mutex)
-			{
-				if (!activeUpdates.ContainsKey(id))
-				{
-					activeUpdates.Add(id, 1);
-					isOuterUpdate = true;
-				}
-				else
-					activeUpdates[id] += 1;
+				action.Invoke();
+				return;
 			}
 
-			if (isOuterUpdate && allowLoader && context is Control control)
+			SessionUpdateInfo? sessionInfo = null;
+			var sessionId = Application.SessionId;
+			if (sessionId == null)
 			{
-				control.ShowLoader = true;
-				action.Invoke();
-				control.ShowLoader = false;
+				Application.RunInContext(context, () =>
+				{
+					sessionInfo = Application.Session.SessionUpdateInfo;
+				});
 			}
 			else
 			{
-				action.Invoke();
+				sessionInfo = Application.Session.SessionUpdateInfo;
 			}
 
-			lock (mutex) { activeUpdates[id] -= 1; }
+			RunAction(context, action, showLoader, sessionInfo!);
+		}
 
-			bool performUpdate  = false;
-			lock (mutex)
+		private static void RunAction(IWisejComponent context, Action action, bool showLoader, SessionUpdateInfo sessionInfo)
+		{
+			//lock (sessionInfo)
 			{
-				if (activeUpdates[id] <= 0)
+				try
 				{
-					activeUpdates.Remove(id);
-					performUpdate = true;
+					if (showLoader && context is Control control)
+					{
+						if (sessionInfo.LoaderCount == 0)
+						{
+							Application.Update(context, () => control.ShowLoader = true);
+						}
+
+						sessionInfo.LoaderCount++;
+					}
+
+					nestedUpdate = true;
+					Application.Update(context, action);
+				}
+				finally
+				{
+					nestedUpdate = false;
+					if (showLoader && context is Control control)
+					{
+						sessionInfo.LoaderCount--;
+						if (sessionInfo.LoaderCount == 0)
+						{
+							Application.Update(context, () => control.ShowLoader = false);
+						}
+					}
 				}
 			}
+		}
 
-			if(performUpdate)
-				Application.Update(context);
+		private class SessionUpdateInfo
+		{
+			public int LoaderCount = 0;
 		}
 	}
+
+	
 }
