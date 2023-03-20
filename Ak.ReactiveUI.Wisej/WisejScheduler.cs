@@ -21,15 +21,15 @@ public class WisejScheduler : IScheduler
 	{
 		var isCancelled = false; 
 		var innerDisp = new SerialDisposable() { Disposable = Disposable.Empty };
-		SessionUpdateHandler.UpdateClient(context, () =>
-		{
-			if (isCancelled)
-			{
-				return;
-			}
+		//SessionUpdateHandler.UpdateClient(context, () =>
+		//{
+		//	if (isCancelled)
+		//	{
+		//		return;
+		//	}
 
 			innerDisp.Disposable = action(this, state);
-		}, showLoader: true);
+		//}, showLoader: true);
 
 		 return new CompositeDisposable(
 			Disposable.Create(() => isCancelled = true),
@@ -49,13 +49,13 @@ public class WisejScheduler : IScheduler
 			if (task.IsCanceled)
 				return;
 
-			SessionUpdateHandler.UpdateClient(context, () =>
-			{
+			//SessionUpdateHandler.UpdateClient(context, () =>
+			//{
 				if (token.IsCancellationRequested)
 					return;
 			
 				innerDisp.Disposable = action(this, state);
-			});
+			//});
 		}, token.Token);
 
 		return new CompositeDisposable(
