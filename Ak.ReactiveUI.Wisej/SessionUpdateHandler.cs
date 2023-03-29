@@ -56,7 +56,13 @@ namespace ReactiveUI.Wisej
 					{
 						if (sessionInfo.LoaderCount == 0)
 						{
-							Application.Update(context, () => control.ShowLoader = true);
+							Application.Update(context, () =>
+							{
+								if (Application.Session.CurrentPage is Control currentPage)
+									currentPage.ShowLoader = true;
+								else
+									control.ShowLoader = true;
+							});
 						}
 
 						sessionInfo.LoaderCount++;
@@ -73,7 +79,12 @@ namespace ReactiveUI.Wisej
 						sessionInfo.LoaderCount--;
 						if (sessionInfo.LoaderCount == 0)
 						{
-							Application.Update(context, () => control.ShowLoader = false);
+							Application.Update(context, () =>
+							{
+								if (Application.Session.CurrentPage is Control currentPage)
+									currentPage.ShowLoader = false;
+								control.ShowLoader = false;
+							});
 						}
 					}
 				}
