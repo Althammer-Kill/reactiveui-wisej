@@ -109,7 +109,7 @@ namespace ReactiveUI.Wisej
 				if (showLoader && loaderShown)
 					ShowLoader(sessionInfo, context, false);
 				else
-					Application.Update(context);
+					UpdateClient(context);
 			});
 		}
 
@@ -137,19 +137,19 @@ namespace ReactiveUI.Wisej
 				if (sessionInfo.CurrentForm != null && value)
 				{
 					sessionInfo.FormStack.Push(sessionInfo.CurrentForm);
-					Application.Update(sessionInfo.CurrentForm, () => sessionInfo.CurrentForm.ShowLoader = true);
+					UpdateClient(sessionInfo.CurrentForm, () => sessionInfo.CurrentForm.ShowLoader = true);
 				}
 				else if  (sessionInfo.FormStack.Count > 0 && !value)
 				{
 					var form = sessionInfo.FormStack.Pop();
-					Application.Update(form, () => form.ShowLoader = false);
+					UpdateClient(form, () => form.ShowLoader = false);
 				}
 				else if(sessionInfo.CurrentPage != null)
-					Application.Update(sessionInfo.CurrentPage, () => sessionInfo.CurrentPage.ShowLoader = value);
+					UpdateClient(sessionInfo.CurrentPage, () => sessionInfo.CurrentPage.ShowLoader = value);
 				else if(context is Control control)
-					Application.Update(control, () => control.ShowLoader = value);
+					UpdateClient(control, () => control.ShowLoader = value);
 				else
-					Application.Update(context);
+					UpdateClient(context);
 			}
 		}
 
