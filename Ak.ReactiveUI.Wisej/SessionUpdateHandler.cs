@@ -57,15 +57,30 @@ namespace ReactiveUI.Wisej
 			}
 		}
 
-		public static void UpdateClient(IWisejComponent context)
+		public static void UpdateClient(IWisejComponent context, bool forceUpdate = false)
 		{
-			//Debug.WriteLine($"======= UpdateClient");
+			if (!forceUpdate)
+			{
+				var sessionInfo = GetSessionInfo(context);
+				if (sessionInfo.UpdateInProgress)
+					return;
+			}
+		
+
+			//Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
 			Application.Update(context);
 		}
 
-		public static void UpdateClient(IWisejComponent context, Action action)
+		public static void UpdateClient(IWisejComponent context, Action action, bool forceUpdate = false)
 		{
-			//Debug.WriteLine($"======= UpdateClient");
+			if (!forceUpdate)
+			{
+				var sessionInfo = GetSessionInfo(context);
+				if (sessionInfo.UpdateInProgress)
+					return;
+			}
+
+			//Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
 			Application.Update(context, action);
 		}
 
@@ -77,6 +92,8 @@ namespace ReactiveUI.Wisej
 		/// <exception cref="Exception"></exception>
 		public static void Handle(IWisejComponent context, bool showLoader, Func<Task> taskStarter)
 		{
+
+			showLoader = false;
 			if (Application.SessionId == null)
 				throw new InvalidOperationException("We are not in UI Thread");
 
@@ -84,6 +101,7 @@ namespace ReactiveUI.Wisej
 			{
 				var sessionInfo = GetSessionInfo(context);
 
+				sessionInfo.UpdateInProgress = true;
 				var taskCompleted = false;
 				var loaderShown = false;
 
@@ -109,14 +127,16 @@ namespace ReactiveUI.Wisej
 				if (showLoader && loaderShown)
 					ShowLoader(sessionInfo, context, false);
 				else
-					UpdateClient(context);
+					UpdateClient(context, true);
+
+				sessionInfo.UpdateInProgress = false;
 			});
 		}
 
 
 		public static void Handle(IWisejComponent context, bool showLoader, Action action)
 		{
-			Handle(context, showLoader, () => Task.Run(action));
+			Handle(context, showLoader, () => Application.StartTask(action));
 		}
 
 		public static void Handle(IWisejComponent context, Action action)
@@ -137,7 +157,7 @@ namespace ReactiveUI.Wisej
 				if (sessionInfo.CurrentForm != null && value)
 				{
 					sessionInfo.FormStack.Push(sessionInfo.CurrentForm);
-					UpdateClient(sessionInfo.CurrentForm, () => sessionInfo.CurrentForm.ShowLoader = true);
+					UpdateClient(sessionInfo.CurrentForm, () => sessionInfo.CurrentForm.ShowLoader = true, true);
 				}
 				else if  (sessionInfo.FormStack.Count > 0 && !value)
 				{
@@ -145,11 +165,11 @@ namespace ReactiveUI.Wisej
 					UpdateClient(form, () => form.ShowLoader = false);
 				}
 				else if(sessionInfo.CurrentPage != null)
-					UpdateClient(sessionInfo.CurrentPage, () => sessionInfo.CurrentPage.ShowLoader = value);
+					UpdateClient(sessionInfo.CurrentPage, () => sessionInfo.CurrentPage.ShowLoader = value, true);
 				else if(context is Control control)
-					UpdateClient(control, () => control.ShowLoader = value);
+					UpdateClient(control, () => control.ShowLoader = value, true);
 				else
-					UpdateClient(context);
+					UpdateClient(context, true);
 			}
 		}
 
@@ -159,6 +179,7 @@ namespace ReactiveUI.Wisej
 			public Form? CurrentForm = null;
 			public Control? CurrentPage = null;
 			public int LoaderCount = 0;
+			public bool UpdateInProgress = false;
 		}
 
 
