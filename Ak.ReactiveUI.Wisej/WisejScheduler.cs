@@ -12,6 +12,7 @@ public class WisejScheduler : IScheduler
 {
 	private readonly IWisejComponent context;
 
+
 	public WisejScheduler(IWisejComponent context)
 	{
 		this.context = context;
@@ -23,8 +24,8 @@ public class WisejScheduler : IScheduler
 
 		innerDisp.Disposable = action(this, state);
 
-		//SessionUpdateHandler.UpdateClient(context);
-
+		SessionUpdateHandler.UpdateClient(context);
+		
 		return innerDisp;
 	}
 
@@ -45,8 +46,7 @@ public class WisejScheduler : IScheduler
 					return;
 			
 			innerDisp.Disposable = action(this, state);
-
-			//SessionUpdateHandler.UpdateClient(context);
+			SessionUpdateHandler.UpdateClient(context);
 
 		}, token.Token);
 

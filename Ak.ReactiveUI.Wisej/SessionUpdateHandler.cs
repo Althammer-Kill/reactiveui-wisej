@@ -92,8 +92,6 @@ namespace ReactiveUI.Wisej
 		/// <exception cref="Exception"></exception>
 		public static void Handle(IWisejComponent context, bool showLoader, Func<Task> taskStarter)
 		{
-
-			showLoader = false;
 			if (Application.SessionId == null)
 				throw new InvalidOperationException("We are not in UI Thread");
 
@@ -103,17 +101,18 @@ namespace ReactiveUI.Wisej
 
 				sessionInfo.UpdateInProgress = true;
 				var taskCompleted = false;
-				var loaderShown = false;
 
-				if (showLoader)
+				var loaderControl = sessionInfo.CurrentForm ?? sessionInfo.CurrentPage;
+
+				if (showLoader && loaderControl != null)
 				{
-					var loaderTask = Task.Run(async () =>
+					var loaderTask = Application.StartTask(async () =>
 					{
 						await Task.Delay(LoaderDelay);
 						if (!taskCompleted)
 						{
-							ShowLoader(sessionInfo, context, true);
-							loaderShown = true;
+							loaderControl.ShowLoader = true;
+							UpdateClient(context, true);
 						}
 					});
 				}
@@ -124,10 +123,9 @@ namespace ReactiveUI.Wisej
 				taskCompleted = true;
 				//Debug.WriteLine($"======= UpdateHandle End {sessionInfo.LoaderCount}");
 
-				if (showLoader && loaderShown)
-					ShowLoader(sessionInfo, context, false);
-				else
-					UpdateClient(context, true);
+				if(showLoader && loaderControl != null)
+					loaderControl.ShowLoader = false;
+				UpdateClient(context, true);
 
 				sessionInfo.UpdateInProgress = false;
 			});
@@ -149,39 +147,13 @@ namespace ReactiveUI.Wisej
 			Handle(context, true, taskStarter);
 		}
 
-		private static void ShowLoader(SessionUpdateInfo sessionInfo, IWisejComponent context, bool value)
-		{
-			lock (sessionInfo)
-			{
-				sessionInfo.LoaderCount += value ? 1 : -1;
-				if (sessionInfo.CurrentForm != null && value)
-				{
-					sessionInfo.FormStack.Push(sessionInfo.CurrentForm);
-					UpdateClient(sessionInfo.CurrentForm, () => sessionInfo.CurrentForm.ShowLoader = true, true);
-				}
-				else if  (sessionInfo.FormStack.Count > 0 && !value)
-				{
-					var form = sessionInfo.FormStack.Pop();
-					UpdateClient(form, () => form.ShowLoader = false);
-				}
-				else if(sessionInfo.CurrentPage != null)
-					UpdateClient(sessionInfo.CurrentPage, () => sessionInfo.CurrentPage.ShowLoader = value, true);
-				else if(context is Control control)
-					UpdateClient(control, () => control.ShowLoader = value, true);
-				else
-					UpdateClient(context, true);
-			}
-		}
-
 		private class SessionUpdateInfo
 		{
-			public Stack<Form> FormStack = new Stack<Form>();
 			public Form? CurrentForm = null;
 			public Control? CurrentPage = null;
 			public int LoaderCount = 0;
 			public bool UpdateInProgress = false;
 		}
-
 
 		private static SessionUpdateInfo GetSessionInfo(IWisejComponent context)
 		{
