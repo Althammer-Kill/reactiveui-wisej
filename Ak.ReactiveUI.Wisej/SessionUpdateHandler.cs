@@ -16,7 +16,7 @@ namespace ReactiveUI.Wisej
 		/// <summary>
 		/// The time in milliseconds until the loader is diplayed for any action in <see cref="SessionUpdateHandler.Handle"/>.
 		/// </summary>
-		private const int LoaderDelay = 300;
+		private const int LoaderDelay = 100;
 
 		public static Control CurrentPage
 		{
@@ -104,14 +104,17 @@ namespace ReactiveUI.Wisej
 
 				var loaderControl = sessionInfo.CurrentForm ?? sessionInfo.CurrentPage;
 
-				if (showLoader && loaderControl != null)
+				//Showloader is false if control already shows loader
+				showLoader = showLoader && (!loaderControl?.ShowLoader ?? false);
+
+				if (showLoader)
 				{
 					var loaderTask = Application.StartTask(async () =>
 					{
 						await Task.Delay(LoaderDelay);
 						if (!taskCompleted)
 						{
-							loaderControl.ShowLoader = true;
+							loaderControl!.ShowLoader = true;
 							UpdateClient(context, true);
 						}
 					});
@@ -123,8 +126,8 @@ namespace ReactiveUI.Wisej
 				taskCompleted = true;
 				//Debug.WriteLine($"======= UpdateHandle End {sessionInfo.LoaderCount}");
 
-				if(showLoader && loaderControl != null)
-					loaderControl.ShowLoader = false;
+				if(showLoader)
+					loaderControl!.ShowLoader = false;
 				UpdateClient(context, true);
 
 				sessionInfo.UpdateInProgress = false;
@@ -145,6 +148,11 @@ namespace ReactiveUI.Wisej
 		public static void Handle(IWisejComponent context, Func<Task> taskStarter)
 		{
 			Handle(context, true, taskStarter);
+		}
+
+		public static bool IsUpdateInProgress(IWisejComponent context)
+		{
+			return GetSessionInfo(context).UpdateInProgress;
 		}
 
 		private class SessionUpdateInfo

@@ -24,6 +24,9 @@ public class WisejScheduler : IScheduler
 
 		innerDisp.Disposable = action(this, state);
 
+		if (SessionUpdateHandler.IsUpdateInProgress(context))
+			return innerDisp;
+
 		SessionUpdateHandler.UpdateClient(context);
 		
 		return innerDisp;
@@ -46,6 +49,10 @@ public class WisejScheduler : IScheduler
 					return;
 			
 			innerDisp.Disposable = action(this, state);
+
+			if (SessionUpdateHandler.IsUpdateInProgress(context))
+				return;
+
 			SessionUpdateHandler.UpdateClient(context);
 
 		}, token.Token);
