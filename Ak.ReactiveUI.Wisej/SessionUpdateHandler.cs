@@ -6,6 +6,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.SessionState;
 using Wisej.Core;
 using Wisej.Web;
 
@@ -16,44 +17,47 @@ namespace ReactiveUI.Wisej
 		/// <summary>
 		/// The time in milliseconds until the loader is diplayed for any action in <see cref="SessionUpdateHandler.Handle"/>.
 		/// </summary>
-		private const int LoaderDelay = 100;
+		private const int LoaderDelay = 200;
 
-		public static Control CurrentPage
+		public static Control? CurrentPage
 		{
 			get
 			{
 				if (Application.Session == null)
 					throw new InvalidOperationException("Session Object does not exist!");
 
-				Application.Session.SessionUpdateInfo ??= new SessionUpdateInfo();
-				return Application.Session.SessionUpdateInfo.CurrentPage;
+				return Application.Session.SessionUpdateInfo?.CurrentPage ?? null;
 			}
 			set
 			{
 				if (Application.Session == null)
 					throw new InvalidOperationException("Session Object does not exist!");
-
-				Application.Session.SessionUpdateInfo ??= new SessionUpdateInfo();
-				Application.Session.SessionUpdateInfo.CurrentPage = value;
+				lock (Application.Session)
+				{
+					Application.Session.SessionUpdateInfo ??= new SessionUpdateInfo();
+					Application.Session.SessionUpdateInfo.CurrentPage = value;
+				}
 			}
 		}
 
-		public static Form CurrentForm {
+		public static Form? CurrentForm {
 			get
 			{
 				if (Application.Session == null)
 					throw new InvalidOperationException("Session Object does not exist!");
 
-				Application.Session.SessionUpdateInfo ??= new SessionUpdateInfo();
-				return Application.Session.SessionUpdateInfo.CurrentForm;
+				return Application.Session?.SessionUpdateInfo?.CurrentForm ?? null;
 			}
 			set
 			{
 				if (Application.Session == null)
 					throw new InvalidOperationException("Session Object does not exist!");
 
-				Application.Session.SessionUpdateInfo ??= new SessionUpdateInfo();
-				Application.Session.SessionUpdateInfo.CurrentForm = value;
+				lock (Application.Session)
+				{
+					Application.Session.SessionUpdateInfo ??= new SessionUpdateInfo();
+					Application.Session.SessionUpdateInfo.CurrentForm = value;
+				}
 			}
 		}
 
@@ -62,12 +66,12 @@ namespace ReactiveUI.Wisej
 			if (!forceUpdate)
 			{
 				var sessionInfo = GetSessionInfo(context);
-				if (sessionInfo.UpdateInProgress)
+				if (sessionInfo.IsUpdateInProgress)
 					return;
 			}
 		
 
-			//Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
+			Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
 			Application.Update(context);
 		}
 
@@ -76,11 +80,11 @@ namespace ReactiveUI.Wisej
 			if (!forceUpdate)
 			{
 				var sessionInfo = GetSessionInfo(context);
-				if (sessionInfo.UpdateInProgress)
+				if (sessionInfo.IsUpdateInProgress)
 					return;
 			}
 
-			//Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
+			Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
 			Application.Update(context, action);
 		}
 
@@ -98,8 +102,9 @@ namespace ReactiveUI.Wisej
 			Application.StartTask(async () =>
 			{
 				var sessionInfo = GetSessionInfo(context);
+				 
+				sessionInfo.IncrementUpdates();
 
-				sessionInfo.UpdateInProgress = true;
 				var taskCompleted = false;
 
 				var loaderControl = sessionInfo.CurrentForm ?? sessionInfo.CurrentPage;
@@ -112,25 +117,34 @@ namespace ReactiveUI.Wisej
 					var loaderTask = Application.StartTask(async () =>
 					{
 						await Task.Delay(LoaderDelay);
-						if (!taskCompleted)
+
+						lock (loaderControl)
 						{
-							loaderControl!.ShowLoader = true;
-							UpdateClient(context, true);
+							if (!taskCompleted)
+							{
+								loaderControl!.ShowLoader = true;
+								UpdateClient(context, true);
+							}
 						}
 					});
 				}
 				
-				//Debug.WriteLine($"======= UpdateHandle Start {sessionInfo.LoaderCount}");
+
 				var task = taskStarter();
 				await task;
-				taskCompleted = true;
-				//Debug.WriteLine($"======= UpdateHandle End {sessionInfo.LoaderCount}");
 
-				if(showLoader)
-					loaderControl!.ShowLoader = false;
+				if (showLoader)
+				{
+					lock (loaderControl)
+					{
+						taskCompleted = true;
+						loaderControl!.ShowLoader = false;
+					}
+				}
+
 				UpdateClient(context, true);
 
-				sessionInfo.UpdateInProgress = false;
+				sessionInfo.DecrementUpdates();
 			});
 		}
 
@@ -152,15 +166,25 @@ namespace ReactiveUI.Wisej
 
 		public static bool IsUpdateInProgress(IWisejComponent context)
 		{
-			return GetSessionInfo(context).UpdateInProgress;
+			return GetSessionInfo(context).IsUpdateInProgress;
 		}
 
 		private class SessionUpdateInfo
 		{
 			public Form? CurrentForm = null;
 			public Control? CurrentPage = null;
-			public int LoaderCount = 0;
-			public bool UpdateInProgress = false;
+			private volatile int UpdatesInProgress = 0;
+			public bool IsUpdateInProgress => this.UpdatesInProgress > 0;
+
+			public void IncrementUpdates()
+			{
+				Interlocked.Increment(ref UpdatesInProgress);
+			}
+
+			public void DecrementUpdates()
+			{
+				Interlocked.Decrement(ref UpdatesInProgress);
+			}
 		}
 
 		private static SessionUpdateInfo GetSessionInfo(IWisejComponent context)
@@ -170,15 +194,22 @@ namespace ReactiveUI.Wisej
 			{
 				Application.RunInContext(context, () =>
 				{
-					sessionInfo = Application.Session.SessionUpdateInfo;
+					lock (Application.Session)
+					{
+						sessionInfo = Application.Session.SessionUpdateInfo ??= new SessionUpdateInfo();
+					}
+					
 				});
 			}
 			else
 			{
-				sessionInfo = Application.Session.SessionUpdateInfo;
+				lock (Application.Session)
+				{
+					sessionInfo = Application.Session.SessionUpdateInfo ??= new SessionUpdateInfo();
+				}
 			}
 
-			return sessionInfo ?? new SessionUpdateInfo();
+			return sessionInfo!;
 		}
 	}
 

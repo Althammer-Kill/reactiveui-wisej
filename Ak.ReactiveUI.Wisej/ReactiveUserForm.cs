@@ -32,7 +32,7 @@ namespace ReactiveUI.Wisej
 		private readonly CompositeDisposable compositeDisposable = new();
 		private readonly WisejScheduler scheduler;
 		private bool ViewModelBinded = false;
-		private Form previousForm;
+		private Form? previousForm;
 
 		public IScheduler Scheduler => scheduler;
 
