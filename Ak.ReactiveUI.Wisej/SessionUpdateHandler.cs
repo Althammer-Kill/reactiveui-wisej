@@ -71,7 +71,7 @@ namespace ReactiveUI.Wisej
 			}
 		
 
-			Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
+			//Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
 			Application.Update(context);
 		}
 
@@ -84,7 +84,7 @@ namespace ReactiveUI.Wisej
 					return;
 			}
 
-			Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
+			//Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
 			Application.Update(context, action);
 		}
 
