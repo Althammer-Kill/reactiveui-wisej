@@ -104,47 +104,52 @@ namespace ReactiveUI.Wisej
 				var sessionInfo = GetSessionInfo(context);
 				
 				sessionInfo.IncrementUpdates();
+				
+					var taskCompleted = false;
 
-				var taskCompleted = false;
+					var loaderControl = sessionInfo.CurrentForm ?? sessionInfo.CurrentPage;
 
-				var loaderControl = sessionInfo.CurrentForm ?? sessionInfo.CurrentPage;
+					//Showloader is false if control already shows loader
+					showLoader = showLoader && (!loaderControl?.ShowLoader ?? false);
 
-				//Showloader is false if control already shows loader
-				showLoader = showLoader && (!loaderControl?.ShowLoader ?? false);
-
-				if (showLoader && loaderControl != null)
-				{
-					var loaderTask = Application.StartTask(async () =>
+					if (showLoader && loaderControl != null)
 					{
-						await Task.Delay(LoaderDelay);
+						var loaderTask = Application.StartTask(async () =>
+						{
+							await Task.Delay(LoaderDelay);
 
+							lock (loaderControl)
+							{
+								if (!taskCompleted)
+								{
+									loaderControl!.ShowLoader = true;
+									UpdateClient(context, true);
+								}
+							}
+						});
+					}
+
+				try
+				{
+					var task = taskStarter();
+					await task;
+
+				}
+				finally
+				{
+					if (showLoader && loaderControl != null)
+					{
 						lock (loaderControl)
 						{
-							if (!taskCompleted)
-							{
-								loaderControl!.ShowLoader = true;
-								UpdateClient(context, true);
-							}
+							taskCompleted = true;
+							loaderControl!.ShowLoader = false;
 						}
-					});
-				}
-				
-
-				var task = taskStarter();
-				await task;
-
-				if (showLoader && loaderControl != null)
-				{
-					lock (loaderControl)
-					{
-						taskCompleted = true;
-						loaderControl!.ShowLoader = false;
 					}
+
+					UpdateClient(context, true);
+
+					sessionInfo.DecrementUpdates();
 				}
-
-				UpdateClient(context, true);
-
-				sessionInfo.DecrementUpdates();
 			});
 		}
 
