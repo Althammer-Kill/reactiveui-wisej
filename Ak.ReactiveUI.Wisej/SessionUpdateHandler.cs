@@ -71,7 +71,7 @@ namespace ReactiveUI.Wisej
 			}
 		
 
-			//Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
+			//Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss:fff tt}");
 			Application.Update(context);
 		}
 
@@ -84,7 +84,7 @@ namespace ReactiveUI.Wisej
 					return;
 			}
 
-			//Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss}");
+			//Debug.WriteLine($"======= UpdateClient {DateTime.Now:HH:mm:ss:fff tt}");
 			Application.Update(context, action);
 		}
 
@@ -102,7 +102,7 @@ namespace ReactiveUI.Wisej
 			Application.StartTask(async () =>
 			{
 				var sessionInfo = GetSessionInfo(context);
-				 
+				
 				sessionInfo.IncrementUpdates();
 
 				var taskCompleted = false;
@@ -112,7 +112,7 @@ namespace ReactiveUI.Wisej
 				//Showloader is false if control already shows loader
 				showLoader = showLoader && (!loaderControl?.ShowLoader ?? false);
 
-				if (showLoader)
+				if (showLoader && loaderControl != null)
 				{
 					var loaderTask = Application.StartTask(async () =>
 					{
@@ -133,7 +133,7 @@ namespace ReactiveUI.Wisej
 				var task = taskStarter();
 				await task;
 
-				if (showLoader)
+				if (showLoader && loaderControl != null)
 				{
 					lock (loaderControl)
 					{
@@ -169,6 +169,18 @@ namespace ReactiveUI.Wisej
 			return GetSessionInfo(context).IsUpdateInProgress;
 		}
 
+
+		public static void IncrementUpdateLock(IWisejComponent context)
+		{
+			var sessionInfo = GetSessionInfo(context);
+			sessionInfo.IncrementUpdates();
+		}
+		public static void DecrementUpdateLock(IWisejComponent context)
+		{
+			var sessionInfo = GetSessionInfo(context);
+			sessionInfo.DecrementUpdates();
+		}
+
 		private class SessionUpdateInfo
 		{
 			public Form? CurrentForm = null;
@@ -183,7 +195,8 @@ namespace ReactiveUI.Wisej
 
 			public void DecrementUpdates()
 			{
-				Interlocked.Decrement(ref UpdatesInProgress);
+				if (Interlocked.Decrement(ref UpdatesInProgress) < 0)
+					Interlocked.Increment(ref UpdatesInProgress);
 			}
 		}
 
