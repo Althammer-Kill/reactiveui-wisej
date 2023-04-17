@@ -31,7 +31,7 @@ namespace ReactiveUI.Wisej
 		private readonly Subject<Unit> deactivateSubject = new();
 		private readonly CompositeDisposable compositeDisposable = new();
 		private readonly WisejScheduler scheduler;
-		private bool ViewModelBinded = false;
+		private bool ViewModelBound = false;
 		private Form? previousForm;
 
 		public IScheduler Scheduler => scheduler;
@@ -134,10 +134,10 @@ namespace ReactiveUI.Wisej
 
         protected virtual void BindViewModel(CompositeDisposable dr)
         {
-	        if (ViewModelBinded)
-		        throw new Exception("ViewModel was binded twice! Make sure to only call BindViewModel once in the final child class!");
+	        if (ViewModelBound)
+		        throw new Exception("ViewModel was bound twice! Make sure to only call BindViewModel once in the final child class!");
 
-	        ViewModelBinded = true;
+	        ViewModelBound = true;
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
