@@ -99,9 +99,6 @@ namespace ReactiveUI.Wisej
 		/// <exception cref="Exception"></exception>
 		public static void Handle(IWisejComponent context, bool showLoader, Func<Task> taskStarter)
 		{
-			if (Application.SessionId == null)
-				throw new InvalidOperationException("We are not in UI Thread");
-
 			Application.StartTask(async () =>
 			{
 
