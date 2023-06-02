@@ -14,6 +14,9 @@ namespace ReactiveUI.Wisej
 {
 	public static class SessionUpdateHandler
 	{
+
+		public static Func<Exception, Task> OnException = (ex) => Task.CompletedTask;
+		
 		/// <summary>
 		/// The time in milliseconds until the loader is diplayed for any action in <see cref="SessionUpdateHandler.Handle"/>.
 		/// </summary>
@@ -101,6 +104,7 @@ namespace ReactiveUI.Wisej
 
 			Application.StartTask(async () =>
 			{
+
 				var sessionInfo = GetSessionInfo(context);
 				
 				sessionInfo.IncrementUpdates();
@@ -129,12 +133,16 @@ namespace ReactiveUI.Wisej
 						});
 					}
 
-				try
-				{
-					var task = taskStarter();
-					await task;
+					try
+					{
+						var task = taskStarter();
+						await task;
 
-				}
+					}
+					catch (Exception ex)
+					{
+						await OnException(ex);
+					}
 				finally
 				{
 					if (showLoader && loaderControl != null)
