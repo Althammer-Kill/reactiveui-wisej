@@ -10,12 +10,18 @@ namespace ReactiveUI.Wisej;
 
 public class WisejScheduler : IScheduler
 {
+	private const int UpdateThrottleDelay = 100;
+	
 	private readonly IWisejComponent context;
 
+	private SemaphoreSlim updateSemaphore = new SemaphoreSlim(0,1);
+
+	private CancellationTokenSource cancelSource;
 
 	public WisejScheduler(IWisejComponent context)
 	{
 		this.context = context;
+		var task = UpdateTask(cancelSource.Token);
 	}
 
 	public IDisposable Schedule<TState>(TState state, Func<IScheduler, TState, IDisposable> action)
@@ -27,9 +33,29 @@ public class WisejScheduler : IScheduler
 		if (SessionUpdateHandler.IsUpdateInProgress(context))
 			return innerDisp;
 
-		SessionUpdateHandler.UpdateClient(context);
-		
+		updateSemaphore.Release(1);
+
 		return innerDisp;
+	}
+
+	private async Task UpdateTask(CancellationToken token)
+	{
+		while (!token.IsCancellationRequested)
+		{
+			await updateSemaphore.WaitAsync(token);
+			if (token.IsCancellationRequested)
+				return;
+
+			await Task.Delay(UpdateThrottleDelay, token);
+			
+			if (token.IsCancellationRequested)
+				return;
+
+			if (updateSemaphore.CurrentCount == 0)
+			{
+				SessionUpdateHandler.UpdateClient(context);
+			}
+		}
 	}
 
 	public IDisposable Schedule<TState>(TState state, TimeSpan dueTime, Func<IScheduler, TState, IDisposable> action)

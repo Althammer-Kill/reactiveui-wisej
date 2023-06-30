@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.SessionState;
 using Wisej.Core;
 using Wisej.Web;
+
 
 namespace ReactiveUI.Wisej
 {
@@ -101,7 +99,6 @@ namespace ReactiveUI.Wisej
 		{
 			Application.StartTask(async () =>
 			{
-
 				var sessionInfo = GetSessionInfo(context);
 				
 				sessionInfo.IncrementUpdates();
